@@ -3,5 +3,9 @@ export const isValidEmail = (email) => {
 };
 
 export const isValidPassword = (password) => {
-  return password && password.length >= 6;
+  return (
+    typeof password === 'string' &&
+    password.length >= 6 &&
+    Buffer.byteLength(password, 'utf8') <= 72
+  );
 };
