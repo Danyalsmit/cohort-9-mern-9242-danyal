@@ -21,11 +21,12 @@ app.use((req, res) => {
   res.status(404).json({ message: "Route not found" });
 });
 
-// Global error handler
+// Global Error handle
 app.use((err, req, res, next) => {
   logger.error(err);
-  res.status(err.statusCode || 500).json({
-    message: err.message || "Internal server error",
+  const statusCode = err.statusCode || 500;
+  res.status(statusCode).json({
+    message: statusCode >= 500 ? "Internal server error" : err.message,
   });
 });
 
