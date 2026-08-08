@@ -2,6 +2,7 @@ import asyncHandler from '../utils/asyncHandler.js';
 import AppError from '../utils/AppError.js';
 import { isValidEmail, isValidPassword } from '../utils/validators.js';
 import { registerUser, loginUser } from '../services/authService.js';
+import prisma from '../config/prisma.js';
 
 // signup controller
 export const signup = asyncHandler(async (req, res) => {
@@ -26,6 +27,18 @@ export const login = asyncHandler(async (req, res) => {
     res.json(result);
 });
 
-export const logout = (req, res) => {
+// Logut Controller
+export const logout = asyncHandler(async (req, res) => {
+    const authHeader = req.headers.authorization;
+    const token = authHeader.split(' ')[1];
+    const decoded = req.user;
+
+    await prisma.blacklistedToken.create({
+        data: {
+            token,
+            expiresAt: new Date(decoded.exp * 1000),
+        },
+    });
+
     res.json({ message: 'Logged out successfully' });
-};
+});

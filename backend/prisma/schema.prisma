@@ -30,3 +30,10 @@ model user {
 
   note      note[]
 }
+
+model blacklistedToken {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique @db.VarChar(500)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}

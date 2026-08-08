@@ -142,7 +142,38 @@ describe("Auth Routes", () => {
         expect(res.body.user).to.have.property("email", user.email);
     });
 
-    after(async () => {
-        await prisma.$disconnect();
+    it("should logout and blacklist the token", async () => {
+        const user = {
+            name: "Logout User",
+            email: "logout@gmail.com",
+            password: "123456",
+        };
+
+        await request(app).post("/api/auth/signup").send(user);
+
+        const login = await request(app)
+            .post("/api/auth/login")
+            .send({ email: user.email, password: user.password });
+
+        const token = login.body.token;
+
+        const logoutRes = await request(app)
+            .post("/api/auth/logout")
+            .set("Authorization", `Bearer ${token}`);
+
+        expect(logoutRes.status).to.equal(200);
+        expect(logoutRes.body).to.have.property("message", "Logged out successfully");
+
+        // Same token  always reject 
+        const meRes = await request(app)
+            .get("/api/auth/me")
+            .set("Authorization", `Bearer ${token}`);
+
+        expect(meRes.status).to.equal(401);
     });
+
+
+        after(async () => {
+            await prisma.$disconnect();
+        });
 });
