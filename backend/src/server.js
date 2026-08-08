@@ -11,10 +11,10 @@ if (missing.length > 0) {
   process.exit(1);
 }
 
-const PORT = parseInt(process.env.PORT, 10) || 5000;
+const PORT = Number(process.env.PORT);
 
-if (isNaN(PORT)) {
-  console.error("PORT must be a valid number");
+if (!Number.isInteger(PORT) || PORT < 1 || PORT > 65535) {
+  console.error("PORT must be a valid integer between 1 and 65535");
   process.exit(1);
 }
 
