@@ -5,7 +5,7 @@ import { registerUser, loginUser } from '../services/authService.js';
 
 // signup controller
 export const signup = asyncHandler(async (req, res) => {
-    const { name, email, password } = req.body;
+    const { name, email, password } = req.body ?? {};
 
     if (!name || !email || !password) throw new AppError('All fields required', 400);
     if (!isValidEmail(email)) throw new AppError('Invalid email format', 400);
@@ -17,7 +17,7 @@ export const signup = asyncHandler(async (req, res) => {
 
 // Login controller
 export const login = asyncHandler(async (req, res) => {
-    const { email, password } = req.body;
+    const { email, password } = req.body ?? {};
 
     if (!email || !password) throw new AppError('Email and password are required', 400);
     if (!isValidEmail(email)) throw new AppError('Invalid email format', 400);
