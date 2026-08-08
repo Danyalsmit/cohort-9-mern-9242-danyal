@@ -12,7 +12,7 @@ export const registerUser = async ({ name, email, password }) => {
     const hashed = await bcrypt.hash(password, 10);
     const user = await prisma.user.create({ data: { name, email, password: hashed } });
 
-    logger.info(`New user registered: ${email}`);
+    logger.info({ userId: user.id }, "New user registered");
     return { id: user.id, name: user.name, email: user.email };
 };
 
@@ -25,7 +25,7 @@ export const loginUser = async ({ email, password }) => {
     if (!match) throw new AppError('Invalid credentials', 401);
 
     const token = generateToken({ id: user.id, email: user.email });
-    logger.info(`User logged in: ${email}`);
+    logger.info({ userId: user.id }, "User logged in");
 
     return { token, user: { id: user.id, name: user.name, email: user.email } };
 };
