@@ -10,10 +10,17 @@ export const registerUser = async ({ name, email, password }) => {
     if (existing) throw new AppError('Email already registered', 409);
 
     const hashed = await bcrypt.hash(password, 10);
-    const user = await prisma.user.create({ data: { name, email, password: hashed } });
 
-    logger.info({ userId: user.id }, "New user registered");
-    return { id: user.id, name: user.name, email: user.email };
+    try {
+        const user = await prisma.user.create({ data: { name, email, password: hashed } });
+        logger.info({ userId: user.id }, "New user registered");
+        return { id: user.id, name: user.name, email: user.email };
+    } catch (err) {
+        if (err.code === 'P2002') {
+            throw new AppError('Email already registered', 409);
+        }
+        throw err;
+    }
 };
 
 // login user
