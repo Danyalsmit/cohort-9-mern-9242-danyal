@@ -11,9 +11,13 @@ export const protect = async (req, res, next) => {
     const token = authHeader.split(' ')[1];
     const tokenHash = hashToken(token);
 
-    const blacklisted = await prisma.blacklistedToken.findUnique({ where: { token: tokenHash } });
-    if (blacklisted) {
-        return next(new AppError('Token has been revoked, please login again', 401));
+    try {
+        const blacklisted = await prisma.blacklistedToken.findUnique({ where: { token: tokenHash } });
+        if (blacklisted) {
+            return next(new AppError('Token has been revoked, please login again', 401));
+        }
+    } catch (err) {
+        return next(err);
     }
 
     try {
