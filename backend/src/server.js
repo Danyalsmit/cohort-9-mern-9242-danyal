@@ -4,7 +4,7 @@ import app from "./app.js";
 dotenv.config();
 
 const requiredEnvVars = ["DATABASE_URL", "JWT_SECRET", "PORT"];
-const missing = requiredEnvVars.filter((key) => !process.env[key]);
+const missing = requiredEnvVars.filter((key) => !process.env[key]?.trim());
 
 if (missing.length > 0) {
   console.error(`Missing required environment variables: ${missing.join(", ")}`);

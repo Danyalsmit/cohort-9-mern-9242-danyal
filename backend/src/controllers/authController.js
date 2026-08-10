@@ -10,9 +10,13 @@ import { hashToken } from '../utils/tokenService.js';
 export const signup = asyncHandler(async (req, res) => {
     const { name, email, password } = req.body ?? {};
 
-    if (!name || !email || !password) throw new AppError('All fields required', 400);
+    if (!name || typeof name !== 'string' || !name.trim()) {
+        throw new AppError('All fields required', 400);
+    }
+    if (!email || !password) throw new AppError('All fields required', 400);
     if (!isValidEmail(email)) throw new AppError('Invalid email format', 400);
     if (!isValidPassword(password)) throw new AppError('Password must be between 6 and 72 characters', 400);
+
     const user = await registerUser({ name, email, password });
     res.status(201).json(user);
 });

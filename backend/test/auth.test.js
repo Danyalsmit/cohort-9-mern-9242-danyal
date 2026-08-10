@@ -4,14 +4,15 @@ import app from "../src/app.js";
 import prisma from "../src/config/prisma.js";
 
 describe("Auth Routes", () => {
-    beforeEach(async () => {
-        if (!process.env.DATABASE_URL?.includes('_test')) {
-            throw new Error('Refusing to run tests: DATABASE_URL does not point to a test database.');
-        }
-        // Clean database before every test
-        await prisma.note.deleteMany();
-        await prisma.user.deleteMany();
-    });
+ beforeEach(async () => {
+    const dbName = new URL(process.env.DATABASE_URL).pathname.replace('/', '');
+    if (!dbName.endsWith('_test')) {
+        throw new Error('Refusing to run tests: DATABASE_URL does not point to a test database.');
+    }
+    await prisma.blacklistedToken.deleteMany();
+    await prisma.note.deleteMany();
+    await prisma.user.deleteMany();
+});
 
     it("should return welcome message on GET /", async () => {
         const res = await request(app).get("/");
