@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import { createHash } from 'node:crypto';
 
 const JWT_SECRET = process.env.JWT_SECRET?.trim();
 
@@ -12,4 +13,8 @@ export const generateToken = (payload) => {
 
 export const verifyToken = (token) => {
   return jwt.verify(token, JWT_SECRET);
+};
+
+export const hashToken = (token) => {
+  return createHash('sha256').update(token).digest('hex');
 };

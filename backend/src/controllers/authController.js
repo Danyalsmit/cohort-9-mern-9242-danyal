@@ -3,6 +3,8 @@ import AppError from '../utils/AppError.js';
 import { isValidEmail, isValidPassword } from '../utils/validators.js';
 import { registerUser, loginUser } from '../services/authService.js';
 import prisma from '../config/prisma.js';
+import { hashToken } from '../utils/tokenService.js';
+
 
 // signup controller
 export const signup = asyncHandler(async (req, res) => {
@@ -31,10 +33,11 @@ export const logout = asyncHandler(async (req, res) => {
     const authHeader = req.headers.authorization;
     const token = authHeader.split(' ')[1];
     const decoded = req.user;
+    const tokenHash = hashToken(token);
 
     await prisma.blacklistedToken.create({
         data: {
-            token,
+            token: tokenHash,
             expiresAt: new Date(decoded.exp * 1000),
         },
     });

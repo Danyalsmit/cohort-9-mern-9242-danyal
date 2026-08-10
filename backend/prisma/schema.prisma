@@ -33,7 +33,7 @@ model user {
 
 model blacklistedToken {
   id        Int      @id @default(autoincrement())
-  token     String   @unique @db.VarChar(500)
+  token     String   @unique @db.VarChar(64)
   expiresAt DateTime
   createdAt DateTime @default(now())
 }
