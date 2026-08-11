@@ -2,17 +2,25 @@ import request from "supertest";
 import { expect } from "chai";
 import app from "../src/app.js";
 import prisma from "../src/config/prisma.js";
+import { createTestUser } from "./helpers/auth.js";
 
 describe("Auth Routes", () => {
- beforeEach(async () => {
-    const dbName = new URL(process.env.DATABASE_URL).pathname.replace('/', '');
-    if (!dbName.endsWith('_test')) {
-        throw new Error('Refusing to run tests: DATABASE_URL does not point to a test database.');
-    }
-    await prisma.blacklistedToken.deleteMany();
-    await prisma.note.deleteMany();
-    await prisma.user.deleteMany();
-});
+
+    beforeEach(async () => {
+        const dbName = new URL(process.env.DATABASE_URL)
+            .pathname
+            .replace("/", "");
+
+        if (!dbName.endsWith("_test")) {
+            throw new Error(
+                "Refusing to run tests: DATABASE_URL does not point to a test database."
+            );
+        }
+
+        await prisma.blacklistedToken.deleteMany();
+        await prisma.note.deleteMany();
+        await prisma.user.deleteMany();
+    });
 
     it("should return welcome message on GET /", async () => {
         const res = await request(app).get("/");
@@ -31,9 +39,13 @@ describe("Auth Routes", () => {
             });
 
         expect(res.status).to.equal(201);
+
         expect(res.body).to.have.property("id");
         expect(res.body).to.have.property("name", "Test User");
-        expect(res.body).to.have.property("email", "testuser@gmail.com");
+        expect(res.body).to.have.property(
+            "email",
+            "testuser@gmail.com"
+        );
     });
 
     it("should not signup with duplicate email", async () => {
@@ -43,13 +55,16 @@ describe("Auth Routes", () => {
             password: "123456",
         };
 
-        await request(app).post("/api/auth/signup").send(user);
+        await request(app)
+            .post("/api/auth/signup")
+            .send(user);
 
         const res = await request(app)
             .post("/api/auth/signup")
             .send(user);
 
         expect(res.status).to.equal(409);
+
         expect(res.body).to.have.property(
             "message",
             "Email already registered"
@@ -77,10 +92,18 @@ describe("Auth Routes", () => {
             });
 
         expect(res.status).to.equal(200);
+
         expect(res.body).to.have.property("token");
+
         expect(res.body.user).to.have.property("id");
-        expect(res.body.user).to.have.property("name", user.name);
-        expect(res.body.user).to.have.property("email", user.email);
+        expect(res.body.user).to.have.property(
+            "name",
+            user.name
+        );
+        expect(res.body.user).to.have.property(
+            "email",
+            user.email
+        );
     });
 
     it("should return 401 for invalid password", async () => {
@@ -102,6 +125,7 @@ describe("Auth Routes", () => {
             });
 
         expect(res.status).to.equal(401);
+
         expect(res.body).to.have.property(
             "message",
             "Invalid credentials"
@@ -109,63 +133,45 @@ describe("Auth Routes", () => {
     });
 
     it("should return 401 when token is missing", async () => {
-        const res = await request(app).get("/api/auth/me");
+        const res = await request(app)
+            .get("/api/auth/me");
 
         expect(res.status).to.equal(401);
         expect(res.body).to.have.property("message");
     });
 
     it("should return current user with valid token", async () => {
-        const user = {
-            name: "Protected User",
-            email: "protected@gmail.com",
-            password: "123456",
-        };
-
-        await request(app)
-            .post("/api/auth/signup")
-            .send(user);
-
-        const login = await request(app)
-            .post("/api/auth/login")
-            .send({
-                email: user.email,
-                password: user.password,
-            });
-
-        const token = login.body.token;
+        // Helper give me user and token
+        const { user, token } = await createTestUser();
 
         const res = await request(app)
             .get("/api/auth/me")
             .set("Authorization", `Bearer ${token}`);
 
         expect(res.status).to.equal(200);
-        expect(res.body.user).to.have.property("email", user.email);
+
+        expect(res.body.user).to.have.property(
+            "email",
+            user.email
+        );
     });
 
     it("should logout and blacklist the token", async () => {
-        const user = {
-            name: "Logout User",
-            email: "logout@gmail.com",
-            password: "123456",
-        };
-
-        await request(app).post("/api/auth/signup").send(user);
-
-        const login = await request(app)
-            .post("/api/auth/login")
-            .send({ email: user.email, password: user.password });
-
-        const token = login.body.token;
+       // Helper give me user and token
+        const { token } = await createTestUser();
 
         const logoutRes = await request(app)
             .post("/api/auth/logout")
             .set("Authorization", `Bearer ${token}`);
 
         expect(logoutRes.status).to.equal(200);
-        expect(logoutRes.body).to.have.property("message", "Logged out successfully");
 
-        // Same token  always reject 
+        expect(logoutRes.body).to.have.property(
+            "message",
+            "Logged out successfully"
+        );
+
+        // Same token rejected
         const meRes = await request(app)
             .get("/api/auth/me")
             .set("Authorization", `Bearer ${token}`);
@@ -173,8 +179,7 @@ describe("Auth Routes", () => {
         expect(meRes.status).to.equal(401);
     });
 
-
-        after(async () => {
-            await prisma.$disconnect();
-        });
+    after(async () => {
+        await prisma.$disconnect();
+    });
 });

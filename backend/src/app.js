@@ -3,6 +3,7 @@ import cors from "cors";
 import pinoHttp from "pino-http";
 import logger from "./utils/logger.js";
 import authRoutes from "./routes/authRoutes.js";
+import notesRoutes from './routes/notesRoutes.js';
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/auth", authRoutes);
+app.use('/api/notes', notesRoutes);
 
 // 404 handler 
 app.use((req, res) => {
