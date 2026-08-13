@@ -24,6 +24,9 @@ export const getOne = asyncHandler(async (req, res) => {
 
 export const update = asyncHandler(async (req, res) => {
   const { title, content } = req.body ?? {};
+  if (title !== undefined && (typeof title !== "string" || !title.trim())) {
+    throw new AppError("Title is required", 400);
+  }
   const note = await updateNote(req.params.id, req.user.id, { title, content });
   res.json(note);
 });

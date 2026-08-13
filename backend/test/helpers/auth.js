@@ -8,29 +8,36 @@ export async function createTestUser() {
         password: "123456",
     };
 
-    // Signup
-    const signup = await request(app)
-        .post("/api/auth/signup")
-        .send(userData);
+    let signup;
+    let login;
 
-    if (signup.status !== 201) {
-        throw new Error(
-            `Test user signup failed: ${signup.status} ${JSON.stringify(signup.body)}`
-        );
-    }
+    try {
+        // Signup
+        signup = await request(app)
+            .post("/api/auth/signup")
+            .send(userData);
 
-    // Login
-    const login = await request(app)
-        .post("/api/auth/login")
-        .send({
-            email: userData.email,
-            password: userData.password,
-        });
+        if (signup.status !== 201) {
+            throw new Error(
+                `Test user signup failed: ${signup.status} ${JSON.stringify(signup.body)}`
+            );
+        }
 
-    if (login.status !== 200) {
-        throw new Error(
-            `Test user login failed: ${login.status} ${JSON.stringify(login.body)}`
-        );
+        // Login
+        login = await request(app)
+            .post("/api/auth/login")
+            .send({
+                email: userData.email,
+                password: userData.password,
+            });
+
+        if (login.status !== 200) {
+            throw new Error(
+                `Test user login failed: ${login.status} ${JSON.stringify(login.body)}`
+            );
+        }
+    } catch (error) {
+        throw new Error(`createTestUser failed: ${error.message}`);
     }
 
     return {
