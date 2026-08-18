@@ -1,1 +1,89 @@
 @import "tailwindcss";
+
+:root {
+  --color-ink: #1E293B;
+  --color-amber: #D97706;
+  --color-amber-light: #FEF3C7;
+  --color-paper: #FAFAF9;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--color-paper);
+}
+
+.font-display {
+  font-family: 'Fraunces', serif;
+}
+
+/* Tiptap Editor Styling */
+.ProseMirror {
+  outline: none;
+}
+.ProseMirror p {
+  margin: 0.5em 0;
+  line-height: 1.7;
+}
+.ProseMirror h2 {
+  font-family: 'Fraunces', serif;
+  font-size: 1.5em;
+  font-weight: 600;
+  margin: 0.8em 0 0.4em;
+  color: var(--color-ink);
+}
+.ProseMirror ul {
+  list-style: disc;
+  padding-left: 1.5em;
+  margin: 0.5em 0;
+}
+.ProseMirror ol {
+  list-style: decimal;
+  padding-left: 1.5em;
+  margin: 0.5em 0;
+}
+.ProseMirror li {
+  margin: 0.25em 0;
+}
+.ProseMirror blockquote {
+  border-left: 3px solid var(--color-amber);
+  padding-left: 1em;
+  margin: 0.8em 0;
+  color: #57534E;
+  font-style: italic;
+}
+.ProseMirror strong { font-weight: 700; }
+.ProseMirror em { font-style: italic; }
+.ProseMirror s { text-decoration: line-through; }
+
+.note-preview {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 8;
+  line-clamp: 8;
+}
+.note-preview p {
+  margin: 0.3em 0;
+}
+
+.note-preview ul,
+.note-preview ol {
+  padding-left: 1.2em;
+  margin: 0.3em 0;
+}
+
+.note-preview li {
+  margin: 0.15em 0;
+}
+
+.note-preview h2 {
+  font-size: 1.1em;
+  font-weight: 600;
+  margin: 0.3em 0;
+}
+
+.note-preview blockquote {
+  border-left: 2px solid #D97706;
+  padding-left: 0.6em;
+  color: #78716C;
+}
