@@ -10,11 +10,12 @@ export default function Dashboard() {
 
   const handleLogout = async () => {
     try {
-      await logoutUser(); 
+      await logoutUser();
+      toast.success("Logged out successfully");
     } catch (err) {
+      toast.error("Logout request failed, but you've been signed out locally");
     } finally {
       dispatch(logout());
-      toast.success("Logged out successfully");
       navigate("/login");
     }
   };
