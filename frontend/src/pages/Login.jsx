@@ -11,7 +11,6 @@ export default function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-//   use form hook
   const {
     register,
     handleSubmit,
@@ -21,7 +20,6 @@ export default function Login() {
     mode: "onBlur",
   });
 
-// Submit Function
   const onSubmit = async (data) => {
     try {
       const res = await loginUser(data);
@@ -42,8 +40,9 @@ export default function Login() {
         <h1 className="text-2xl font-bold text-gray-900">Log in</h1>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">Email</label>
+          <label htmlFor="login-email" className="block text-sm font-medium text-gray-700">Email</label>
           <input
+            id="login-email"
             type="email"
             {...register("email")}
             className="mt-1 w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -54,8 +53,9 @@ export default function Login() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">Password</label>
+          <label htmlFor="login-password" className="block text-sm font-medium text-gray-700">Password</label>
           <input
+            id="login-password"
             type="password"
             {...register("password")}
             className="mt-1 w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"

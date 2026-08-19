@@ -36,8 +36,9 @@ export default function Signup() {
         <h1 className="text-2xl font-bold text-gray-900">Sign up</h1>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">Name</label>
+          <label htmlFor="signup-name" className="block text-sm font-medium text-gray-700">Name</label>
           <input
+            id="signup-name"
             {...register("name")}
             className="mt-1 w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
@@ -47,8 +48,9 @@ export default function Signup() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">Email</label>
+          <label htmlFor="signup-email" className="block text-sm font-medium text-gray-700">Email</label>
           <input
+            id="signup-email"
             type="email"
             {...register("email")}
             className="mt-1 w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -59,8 +61,9 @@ export default function Signup() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">Password</label>
+          <label htmlFor="signup-password" className="block text-sm font-medium text-gray-700">Password</label>
           <input
+            id="signup-password"
             type="password"
             {...register("password")}
             className="mt-1 w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
