@@ -1,12 +1,33 @@
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
 import NoteEditor from "./pages/NoteEditor";
+import Profile from "./pages/Profile";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import GuestRoute from "./routes/GuestRoute";
+import { getCurrentUser } from "./api/authApi";
+import { setCredentials } from "./redux/slices/authSlice";
 
 function App() {
+  const dispatch = useDispatch();
+  const token = useSelector((state) => state.auth.token);
+  const user = useSelector((state) => state.auth.user);
+
+  useEffect(() => {
+    if (token && !user) {
+      getCurrentUser()
+        .then((res) => {
+          dispatch(setCredentials({ user: res.data.user, token }));
+        })
+        .catch(() => {
+          dispatch(setCredentials({ user: null, token: null }));
+        });
+    }
+  }, [token, user, dispatch]);
+
   return (
     <BrowserRouter>
       <Routes>
@@ -50,6 +71,14 @@ function App() {
           element={
             <ProtectedRoute>
               <NoteEditor />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
             </ProtectedRoute>
           }
         />

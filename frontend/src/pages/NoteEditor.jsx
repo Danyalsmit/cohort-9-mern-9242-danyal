@@ -5,6 +5,7 @@ import StarterKit from "@tiptap/starter-kit";
 import toast from "react-hot-toast";
 import { getNoteById, createNote, updateNote } from "../api/notesApi";
 import EditorToolbar from "../components/EditorToolbar";
+import { ArrowLeftIcon, SaveIcon } from "../components/Icons";
 
 export default function NoteEditor() {
   const { id } = useParams();
@@ -15,16 +16,18 @@ export default function NoteEditor() {
   const [loading, setLoading] = useState(isEditMode);
   const [saving, setSaving] = useState(false);
   const [noteContent, setNoteContent] = useState(null);
+
   const editor = useEditor({
     extensions: [StarterKit],
     content: "",
     editorProps: {
       attributes: {
         class:
-          "max-w-none min-h-[300px] px-4 pb-4 focus:outline-none text-gray-800",
+          "prose prose-stone max-w-none min-h-[400px] px-6 pb-6 focus:outline-none text-slate-700 prose-p:my-2 prose-headings:font-display prose-headings:font-bold",
       },
     },
   });
+
   useEffect(() => {
     if (!isEditMode) return;
     let cancelled = false;
@@ -36,7 +39,7 @@ export default function NoteEditor() {
           setTitle(res.data.title);
           setNoteContent(res.data.content);
         }
-      } catch (err) {
+      } catch {
         if (!cancelled) {
           toast.error("Failed to load note");
           navigate("/dashboard");
@@ -82,48 +85,70 @@ export default function NoteEditor() {
   };
 
   if (loading) {
-    return <p className="p-8 text-gray-500">Loading note...</p>;
+    return (
+      <div className="min-h-screen bg-[#fafaf9] flex items-center justify-center">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-8 h-8 border-3 border-amber-600 border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-stone-500 text-sm font-medium">Loading note...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="min-h-screen bg-stone-50">
-      <div className="flex justify-between items-center px-8 py-5 bg-white border-b border-stone-200">
-        <h1 className="font-display text-2xl font-semibold text-slate-800">
-          {isEditMode ? "Edit Note" : "New Note"}
-        </h1>
-        <div className="flex gap-3">
-          <button
-            onClick={() => navigate("/dashboard")}
-            className="px-4 py-2 rounded-md border border-stone-300 text-stone-600 font-medium hover:bg-stone-100 transition-colors"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={handleSave}
-            disabled={saving}
-            className="bg-amber-600 text-white px-4 py-2 rounded-md font-medium hover:bg-amber-700 disabled:opacity-50 transition-colors"
-          >
-            {saving ? "Saving..." : "Save"}
-          </button>
-        </div>
-      </div>
+    <div className="min-h-screen bg-[#fafaf9]">
+      <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-stone-200/60">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6">
+          <div className="flex justify-between items-center h-16">
+            <button
+              onClick={() => navigate("/dashboard")}
+              className="inline-flex items-center gap-2 text-stone-600 hover:text-slate-800 font-medium text-sm transition-colors"
+            >
+              <ArrowLeftIcon />
+              Back
+            </button>
 
-      <div className="px-8 py-8 max-w-3xl mx-auto">
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => navigate("/dashboard")}
+                className="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-stone-200 text-stone-600 font-medium text-sm hover:bg-stone-50 hover:border-stone-300 active:scale-95 transition-all duration-200"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSave}
+                disabled={saving}
+                className="inline-flex items-center gap-2 bg-amber-600 text-white px-5 py-2 rounded-lg font-semibold text-sm hover:bg-amber-700 hover:shadow-lg hover:shadow-amber-600/20 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+              >
+                <SaveIcon />
+                {saving ? "Saving..." : "Save"}
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main className="max-w-3xl mx-auto px-4 sm:px-6 py-8 pb-24">
         <input
           type="text"
           placeholder="Note title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="w-full font-display text-2xl font-semibold text-slate-800 border-b border-stone-300 pb-3 mb-6 focus:outline-none focus:border-amber-600 bg-transparent"
+          className="w-full font-display text-3xl sm:text-4xl font-bold text-slate-800 placeholder-stone-300 border-none pb-4 mb-2 focus:outline-none focus:ring-0 bg-transparent"
         />
 
-        <div className="bg-white rounded-lg border border-stone-200">
+        <div className="bg-white rounded-2xl border border-stone-200/80 shadow-sm overflow-hidden">
           <EditorToolbar editor={editor} />
-          <div className="px-4 pb-4 pt-2 overflow-x-hidden overflow-y-auto max-h-[600px] ">
+          <div className="overflow-x-hidden overflow-y-auto max-h-[calc(100vh-280px)]">
             <EditorContent editor={editor} />
           </div>
         </div>
-      </div>
+
+        <div className="mt-4 flex items-center justify-between text-xs text-stone-400 px-1">
+          <span>{isEditMode ? "Editing existing note" : "Creating new note"}</span>
+          <span>{editor?.storage?.characterCount?.characters() || 0} characters</span>
+        </div>
+      </main>
     </div>
   );
 }
