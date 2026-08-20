@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDispatch } from "react-redux";
@@ -6,10 +7,12 @@ import toast from "react-hot-toast";
 import { loginSchema } from "../utils/validationSchemas";
 import { loginUser } from "../api/authApi";
 import { setCredentials } from "../redux/slices/authSlice";
+import { MailIcon, LockIcon, EyeIcon, EyeOffIcon, LoaderIcon, LogoIcon, AlertIcon } from "../components/Icons";
 
 export default function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
 
   const {
     register,
@@ -24,59 +27,107 @@ export default function Login() {
     try {
       const res = await loginUser(data);
       dispatch(setCredentials({ user: res.data.user, token: res.data.token }));
-      toast.success("Logged in successfully");
+      toast.success("Welcome back!");
       navigate("/dashboard");
     } catch (err) {
-      toast.error(err.response?.data?.message || "Login failed");
+      toast.error(err.response?.data?.message || "Invalid email or password");
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="bg-white p-8 rounded-lg shadow-md w-full max-w-sm space-y-4"
-      >
-        <h1 className="text-2xl font-bold text-gray-900">Log in</h1>
+    <div className="min-h-screen bg-[#fafaf9] flex items-center justify-center px-4 py-12 relative overflow-hidden">
+      {/* Decorative background blobs */}
+      <div className="absolute top-0 left-0 w-96 h-96 bg-amber-200/20 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
+      <div className="absolute bottom-0 right-0 w-96 h-96 bg-orange-200/20 rounded-full blur-3xl translate-x-1/2 translate-y-1/2 pointer-events-none"></div>
 
-        <div>
-          <label htmlFor="login-email" className="block text-sm font-medium text-gray-700">Email</label>
-          <input
-            id="login-email"
-            type="email"
-            {...register("email")}
-            className="mt-1 w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          />
-          {errors.email && (
-            <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
-          )}
+      <div className="w-full max-w-md relative z-10">
+        {/* Logo / Brand */}
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-12 h-12 bg-amber-600 rounded-xl shadow-lg shadow-amber-600/20 mb-4">
+            <LogoIcon className="text-white" />
+          </div>
+          <h1 className="font-display text-3xl font-bold text-slate-800">Welcome back</h1>
+          <p className="text-stone-500 mt-2 text-sm">Sign in to continue to your notes</p>
         </div>
 
-        <div>
-          <label htmlFor="login-password" className="block text-sm font-medium text-gray-700">Password</label>
-          <input
-            id="login-password"
-            type="password"
-            {...register("password")}
-            className="mt-1 w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          />
-          {errors.password && (
-            <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
-          )}
-        </div>
-
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700 disabled:opacity-50"
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="bg-white rounded-2xl border border-stone-200/80 shadow-xl shadow-stone-200/50 p-8 space-y-5"
         >
-          {isSubmitting ? "Logging in..." : "Log in"}
-        </button>
+          <div>
+            <label htmlFor="login-email" className="block text-sm font-semibold text-slate-700 mb-1.5">Email</label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-stone-400">
+                <MailIcon />
+              </div>
+              <input
+                id="login-email"
+                type="email"
+                {...register("email")}
+                placeholder="you@example.com"
+                className="w-full pl-11 pr-4 py-2.5 bg-stone-50 border border-stone-200 rounded-xl text-sm text-slate-700 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 focus:bg-white transition-all"
+              />
+            </div>
+            {errors.email && (
+              <p className="text-red-500 text-xs mt-1.5 font-medium flex items-center gap-1">
+                <AlertIcon />
+                {errors.email.message}
+              </p>
+            )}
+          </div>
 
-        <p className="text-sm text-center text-gray-600">
-          Don't have an account? <Link to="/signup" className="text-indigo-600">Sign up</Link>
-        </p>
-      </form>
+          <div>
+            <label htmlFor="login-password" className="block text-sm font-semibold text-slate-700 mb-1.5">Password</label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-stone-400">
+                <LockIcon />
+              </div>
+              <input
+                id="login-password"
+                type={showPassword ? "text" : "password"}
+                {...register("password")}
+                placeholder="••••••••"
+                className="w-full pl-11 pr-11 py-2.5 bg-stone-50 border border-stone-200 rounded-xl text-sm text-slate-700 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 focus:bg-white transition-all"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-stone-400 hover:text-stone-600 transition-colors"
+              >
+                {showPassword ? <EyeOffIcon /> : <EyeIcon />}
+              </button>
+            </div>
+            {errors.password && (
+              <p className="text-red-500 text-xs mt-1.5 font-medium flex items-center gap-1">
+                <AlertIcon />
+                {errors.password.message}
+              </p>
+            )}
+          </div>
+
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full bg-amber-600 text-white py-2.5 rounded-xl font-semibold text-sm hover:bg-amber-700 hover:shadow-lg hover:shadow-amber-600/25 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center gap-2"
+          >
+            {isSubmitting ? (
+              <>
+                <LoaderIcon />
+                Signing in...
+              </>
+            ) : (
+              "Log in"
+            )}
+          </button>
+
+          <p className="text-sm text-center text-stone-500 pt-1">
+            Don't have an account?{" "}
+            <Link to="/signup" className="font-semibold text-amber-700 hover:text-amber-800 transition-colors">
+              Sign up
+            </Link>
+          </p>
+        </form>
+      </div>
     </div>
   );
 }
