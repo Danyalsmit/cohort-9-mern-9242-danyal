@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import CharacterCount from "@tiptap/extension-character-count";
 import toast from "react-hot-toast";
 import { getNoteById, createNote, updateNote } from "../api/notesApi";
 import EditorToolbar from "../components/EditorToolbar";
@@ -18,12 +19,12 @@ export default function NoteEditor() {
   const [noteContent, setNoteContent] = useState(null);
 
   const editor = useEditor({
-    extensions: [StarterKit],
+    extensions: [StarterKit, CharacterCount],
     content: "",
     editorProps: {
       attributes: {
         class:
-          "prose prose-stone max-w-none min-h-[400px] px-6 pb-6 focus:outline-none text-slate-700 prose-p:my-2 prose-headings:font-display prose-headings:font-bold",
+          "max-w-none min-h-[400px] px-6 pb-6 focus:outline-none text-slate-700",
       },
     },
   });
@@ -50,7 +51,9 @@ export default function NoteEditor() {
     };
 
     loadNote();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [id, isEditMode, navigate]);
 
   useEffect(() => {
