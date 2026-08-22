@@ -20,11 +20,16 @@ export const protect = async (req, res, next) => {
         return next(err);
     }
 
+    let decoded;
     try {
-        req.user = verifyToken(token);
+        decoded = verifyToken(token);
+    } catch (err) {
+        return next(new AppError('Invalid or expired token', 401));
+    }
 
+    try {
         const user = await prisma.user.findUnique({
-            where: { id: req.user.id },
+            where: { id: decoded.id },
             select: {
                 id: true,
                 name: true,
@@ -36,9 +41,10 @@ export const protect = async (req, res, next) => {
         if (!user) {
             return next(new AppError('User not found', 404));
         }
+
         req.user = user;
         next();
     } catch (err) {
-        next(new AppError('Invalid or expired token', 401));
+        next(err); 
     }
 };
