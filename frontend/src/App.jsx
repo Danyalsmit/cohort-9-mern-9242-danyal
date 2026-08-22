@@ -17,15 +17,25 @@ function App() {
   const user = useSelector((state) => state.auth.user);
 
   useEffect(() => {
+    let cancelled = false;
+
     if (token && !user) {
       getCurrentUser()
         .then((res) => {
-          dispatch(setCredentials({ user: res.data.user, token }));
+          if (!cancelled) {
+            dispatch(setCredentials({ user: res.data.user, token }));
+          }
         })
         .catch(() => {
-          dispatch(setCredentials({ user: null, token: null }));
+          if (!cancelled) {
+            dispatch(setCredentials({ user: null, token: null }));
+          }
         });
     }
+
+    return () => {
+      cancelled = true;
+    };
   }, [token, user, dispatch]);
 
   return (
