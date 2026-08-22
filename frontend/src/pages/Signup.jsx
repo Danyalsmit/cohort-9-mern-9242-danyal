@@ -32,12 +32,10 @@ export default function Signup() {
 
   return (
     <div className="min-h-screen bg-[#fafaf9] flex items-center justify-center px-4 py-12 relative overflow-hidden">
-      {/* Decorative background blobs */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-amber-200/20 rounded-full blur-3xl translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-orange-200/20 rounded-full blur-3xl -translate-x-1/2 translate-y-1/2 pointer-events-none"></div>
 
       <div className="w-full max-w-md relative z-10">
-        {/* Logo / Brand */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-12 h-12 bg-amber-600 rounded-xl shadow-lg shadow-amber-600/20 mb-4">
             <LogoIcon className="text-white" />
