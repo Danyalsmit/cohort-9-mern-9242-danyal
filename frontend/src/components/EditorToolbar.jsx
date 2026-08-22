@@ -4,7 +4,7 @@ import { BoldIcon, ItalicIcon, StrikeIcon, HeadingIcon, ListIcon, OrderedListIco
 export default function EditorToolbar({ editor }) {
   const [canUndo, setCanUndo] = useState(false);
   const [canRedo, setCanRedo] = useState(false);
-  
+
   const [activeStates, setActiveStates] = useState({
     bold: false,
     italic: false,
@@ -21,7 +21,7 @@ export default function EditorToolbar({ editor }) {
     const updateStates = () => {
       setCanUndo(editor.can().undo());
       setCanRedo(editor.can().redo());
-      
+
       setActiveStates({
         bold: editor.isActive("bold"),
         italic: editor.isActive("italic"),
@@ -47,10 +47,9 @@ export default function EditorToolbar({ editor }) {
   if (!editor) return null;
 
   const btnClass = (isActive, isDisabled = false) =>
-    `p-2.5 rounded-lg transition-all duration-200 ${
-      isActive
-        ? "bg-amber-600 text-white shadow-md shadow-amber-600/20"
-        : "text-stone-500 hover:text-slate-700 hover:bg-stone-100"
+    `p-2.5 rounded-lg transition-all duration-200 ${isActive
+      ? "bg-amber-600 text-white shadow-md shadow-amber-600/20"
+      : "text-stone-500 hover:text-slate-700 hover:bg-stone-100"
     } ${isDisabled ? "opacity-30 cursor-not-allowed" : "cursor-pointer active:scale-90"}`;
 
   const tools = [
@@ -73,6 +72,8 @@ export default function EditorToolbar({ editor }) {
             onClick={tool.action}
             className={btnClass(tool.isActive)}
             title={tool.title}
+            aria-label={tool.title}
+            aria-pressed={tool.isActive}
           >
             {tool.icon}
           </button>
