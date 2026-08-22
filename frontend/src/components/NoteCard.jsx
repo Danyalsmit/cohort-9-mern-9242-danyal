@@ -104,20 +104,19 @@ export default function NoteCard({ note, onDelete, onEdit, index }) {
         </p>
 
         <div
-          className="flex gap-1 opacity-0 group-hover:opacity-100 transition-all duration-200 translate-y-1 group-hover:translate-y-0"
+          className="flex gap-1 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 translate-y-1 group-hover:translate-y-0 group-focus-within:translate-y-0 transition-all duration-200"
           onClick={(e) => e.stopPropagation()}
         >
           <button
             onClick={() => onEdit(note.id)}
-            className="p-2 rounded-lg text-stone-500 hover:text-amber-700 hover:bg-amber-50 transition-all duration-200"
+            className="p-2 rounded-lg text-stone-500 hover:text-amber-700 hover:bg-amber-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber-600 transition-all duration-200"
             title="Edit"
           >
             <EditIcon />
           </button>
-
           <button
             onClick={() => onDelete(note.id)}
-            className="p-2 rounded-lg text-stone-500 hover:text-red-600 hover:bg-red-50 transition-all duration-200"
+            className="p-2 rounded-lg text-stone-500 hover:text-red-600 hover:bg-red-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-red-600 transition-all duration-200"
             title="Delete"
           >
             <TrashIcon />
