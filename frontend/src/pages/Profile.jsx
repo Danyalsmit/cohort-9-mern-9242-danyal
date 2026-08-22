@@ -9,13 +9,15 @@ export default function Profile() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
-
+  
   const handleLogout = async () => {
     try {
       await logoutUser();
+      toast.success("Logged out successfully");
+    } catch {
+      toast.error("Logout request failed, but you've been signed out locally");
     } finally {
       dispatch(logout());
-      toast.success("Logged out successfully");
       navigate("/login");
     }
   };
@@ -84,7 +86,7 @@ export default function Profile() {
               <div>
                 <p className="text-xs font-semibold text-stone-400 uppercase tracking-wider">Member Since</p>
                 <p className="text-sm font-semibold text-slate-800">
-                  {user.createdAt 
+                  {user.createdAt
                     ? new Date(user.createdAt).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })
                     : "N/A"}
                 </p>
