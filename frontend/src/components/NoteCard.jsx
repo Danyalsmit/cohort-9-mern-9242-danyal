@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { EditIcon, TrashIcon } from "./Icons";
+import DOMPurify from "dompurify";
+
 
 const bgColors = [
   { className: "bg-[#fffbeb]", color: "#fffbeb", border: "#fbbf24" },
@@ -81,12 +83,11 @@ export default function NoteCard({ note, onDelete, onEdit, index }) {
 
       <div className="relative">
         <div
-          ref={previewRef}
           className="note-preview text-stone-600 text-sm leading-relaxed max-h-[180px] overflow-hidden"
           dangerouslySetInnerHTML={{
-            __html:
-              note.content ||
-              "<p class='text-stone-400 italic'>Empty note</p>",
+            __html: DOMPurify.sanitize(
+              note.content || "<p class='text-stone-400 italic'>Empty note</p>"
+            ),
           }}
         />
         {isOverflowing && (
