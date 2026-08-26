@@ -13,9 +13,6 @@ import {
 
 import toast from "react-hot-toast";
 
-// --------------------------------------------------
-// Mocks
-// --------------------------------------------------
 
 const mockNavigate = jest.fn();
 const mockGetHTML = jest.fn();
@@ -77,9 +74,6 @@ jest.mock("../../components/Icons", () => ({
     SaveIcon: () => <span data-testid="save-icon" />,
 }));
 
-// --------------------------------------------------
-// Setup
-// --------------------------------------------------
 
 const { useParams } = require("react-router-dom");
 
@@ -102,10 +96,6 @@ beforeEach(() => {
 
     useParams.mockReturnValue({});
 });
-
-// --------------------------------------------------
-// Tests
-// --------------------------------------------------
 
 describe("NoteEditor", () => {
     test("renders create mode correctly", () => {
@@ -301,17 +291,14 @@ describe("NoteEditor", () => {
 
         render(<NoteEditor />);
 
-        // Initially loading state should appear
         expect(
             screen.getByText("Loading note...")
         ).toBeInTheDocument();
 
-        // Wait for API call and component update
         await waitFor(() => {
             expect(getNoteById).toHaveBeenCalledWith("123");
         });
 
-        // Wait until loading is finished and title is rendered
         await waitFor(() => {
             expect(
                 screen.getByDisplayValue("Existing Note")
@@ -322,7 +309,6 @@ describe("NoteEditor", () => {
             screen.getByText("Editing existing note")
         ).toBeInTheDocument();
 
-        // Content should be passed to Tiptap
         await waitFor(() => {
             expect(mockSetContent).toHaveBeenCalledWith(
                 "<p>Existing content</p>"
