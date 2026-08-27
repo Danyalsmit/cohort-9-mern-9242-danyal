@@ -57,7 +57,7 @@ describe("Profile page", () => {
       id: 1,
       name: "Ali Khan",
       email: "ali@example.com",
-      createdAt: "2024-01-15T00:00:00.000Z",
+      createdAt: "2024-01-15T12:00:00.000Z",
     });
 
     expect(screen.getAllByText("Ali Khan").length).toBeGreaterThan(0);
