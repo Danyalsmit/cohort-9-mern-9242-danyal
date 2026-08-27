@@ -65,9 +65,9 @@ export default function EditorToolbar({ editor }) {
   return (
     <div className="sticky top-0 z-20 bg-white/95 backdrop-blur-sm border-b border-stone-200/60 px-4 py-2.5">
       <div className="flex flex-wrap items-center gap-1">
-        {tools.map((tool, i) => (
+        {tools.map((tool) => (
           <button
-            key={i}
+            key={tool.title}
             type="button"
             onClick={tool.action}
             className={btnClass(tool.isActive)}
