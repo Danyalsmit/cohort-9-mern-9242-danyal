@@ -110,7 +110,6 @@ body {
 
 .ProseMirror blockquote {
   border-left: 3px solid var(--color-amber-550);
-  padding-left: 1em;
   margin: 1em 0;
   color: #57534E;
   font-style: italic;
@@ -128,8 +127,7 @@ body {
   font-style: italic;
 }
 
-.ProseMirror s,
-.ProseMirror strike {
+.ProseMirror s {
   text-decoration: line-through;
   color: #78716c;
 }

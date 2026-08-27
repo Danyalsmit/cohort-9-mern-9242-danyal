@@ -36,6 +36,7 @@ export default function Profile() {
         <div className="max-w-3xl mx-auto px-4 sm:px-6">
           <div className="flex items-center h-16">
             <button
+              type="button"
               onClick={() => navigate("/dashboard")}
               className="inline-flex items-center gap-2 text-stone-600 hover:text-slate-800 font-medium text-sm transition-colors"
             >
@@ -96,6 +97,7 @@ export default function Profile() {
 
           <div className="border-t border-stone-100 p-6">
             <button
+              type="button"
               onClick={handleLogout}
               className="w-full flex items-center justify-center gap-2 bg-red-50 text-red-600 py-2.5 rounded-xl font-semibold text-sm hover:bg-red-100 active:scale-[0.98] transition-all duration-200"
             >

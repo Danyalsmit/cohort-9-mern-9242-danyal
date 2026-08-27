@@ -34,7 +34,7 @@ export default function NoteCard({
 
   const cleanContent = DOMPurify.sanitize(
     note.content ||
-      "<p class='text-stone-400 italic'>Empty note</p>"
+    "<p class='text-stone-400 italic'>Empty note</p>"
   );
 
   const handleCardKeyDown = (event) => {
@@ -94,10 +94,10 @@ export default function NoteCard({
           <p className="text-xs text-stone-400">
             {note.updatedAt
               ? new Date(note.updatedAt).toLocaleDateString("en-GB", {
-                  day: "numeric",
-                  month: "short",
-                  year: "numeric",
-                })
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+              })
               : ""}
           </p>
         </div>
@@ -105,22 +105,21 @@ export default function NoteCard({
 
       <div
         className="
-          absolute
-          top-3
-          right-3
-          flex
-          gap-1
-          opacity-0
-          group-hover:opacity-100
-          group-focus-within:opacity-100
-          translate-y-1
-          group-hover:translate-y-0
-          group-focus-within:translate-y-0
-          transition-all
-          duration-200
-          z-10
-        "
-        onClick={(event) => event.stopPropagation()}
+    absolute
+    top-3
+    right-3
+    flex
+    gap-1
+    opacity-0
+    group-hover:opacity-100
+    group-focus-within:opacity-100
+    translate-y-1
+    group-hover:translate-y-0
+    group-focus-within:translate-y-0
+    transition-all
+    duration-200
+    z-10
+  "
       >
         <button
           type="button"
@@ -130,17 +129,17 @@ export default function NoteCard({
             onEdit(note.id);
           }}
           className="
-            p-2
-            rounded-lg
-            text-stone-500
-            hover:text-amber-700
-            hover:bg-amber-50
-            focus-visible:outline
-            focus-visible:outline-2
-            focus-visible:outline-amber-600
-            transition-all
-            duration-200
-          "
+      p-2
+      rounded-lg
+      text-stone-500
+      hover:text-amber-700
+      hover:bg-amber-50
+      focus-visible:outline
+      focus-visible:outline-2
+      focus-visible:outline-amber-600
+      transition-all
+      duration-200
+    "
           title="Edit"
         >
           <EditIcon />
@@ -154,22 +153,23 @@ export default function NoteCard({
             onDelete(note.id);
           }}
           className="
-            p-2
-            rounded-lg
-            text-stone-500
-            hover:text-red-600
-            hover:bg-red-50
-            focus-visible:outline
-            focus-visible:outline-2
-            focus-visible:outline-red-600
-            transition-all
-            duration-200
-          "
+           p-2
+           rounded-lg
+           text-stone-500
+           hover:text-red-600
+           hover:bg-red-50
+           focus-visible:outline
+           focus-visible:outline-2
+           focus-visible:outline-red-600
+           transition-all
+           duration-200
+           "
           title="Delete"
         >
           <TrashIcon />
         </button>
       </div>
+
     </article>
   );
 }
