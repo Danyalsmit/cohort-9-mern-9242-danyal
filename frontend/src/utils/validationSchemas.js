@@ -9,7 +9,7 @@ export const signupSchema = z.object({
   email: z
     .string()
     .trim()
-    .email({ message: "Invalid email" }),
+    .email({ error: "Invalid email" }),
 
   password: z
     .string()
@@ -20,7 +20,7 @@ export const loginSchema = z.object({
   email: z
     .string()
     .trim()
-    .email({ message: "Invalid email" }),
+    .email({ error: "Invalid email" }),
 
   password: z
     .string()
