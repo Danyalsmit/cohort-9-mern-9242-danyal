@@ -43,6 +43,7 @@ export const protect = async (req, res, next) => {
         }
 
         req.user = user;
+        req.tokenExp = decoded.exp;        
         next();
     } catch (err) {
         next(err); 

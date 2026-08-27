@@ -32,17 +32,22 @@ export const login = asyncHandler(async (req, res) => {
     res.json(result);
 });
 
-// Logut Controller
+
+// Logout Controller
 export const logout = asyncHandler(async (req, res) => {
     const authHeader = req.headers.authorization;
+
+    if (!authHeader?.startsWith('Bearer ')) {
+        throw new AppError('No token provided', 401);
+    }
+
     const token = authHeader.split(' ')[1];
-    const decoded = req.user;
     const tokenHash = hashToken(token);
 
     await prisma.blacklistedToken.create({
         data: {
             token: tokenHash,
-            expiresAt: new Date(decoded.exp * 1000),
+            expiresAt: new Date(req.tokenExp * 1000),
         },
     });
 
