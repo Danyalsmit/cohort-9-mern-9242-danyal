@@ -17,6 +17,7 @@ export default function NoteEditor() {
   const [loading, setLoading] = useState(isEditMode);
   const [saving, setSaving] = useState(false);
   const [noteContent, setNoteContent] = useState(null);
+  const [characterCount, setCharacterCount] = useState(0);
 
   const editor = useEditor({
     extensions: [StarterKit, CharacterCount],
@@ -66,6 +67,21 @@ export default function NoteEditor() {
       editor.commands.setContent(noteContent);
     }
   }, [editor, noteContent]);
+
+  useEffect(() => {
+    if (!editor?.storage?.characterCount?.characters) return;
+
+    const updateCharacterCount = () => {
+      setCharacterCount(editor.storage.characterCount.characters());
+    };
+
+    updateCharacterCount();
+    editor.on("update", updateCharacterCount);
+
+    return () => {
+      editor.off("update", updateCharacterCount);
+    };
+  }, [editor]);
 
   const handleSave = async () => {
     if (!title.trim()) {
@@ -189,7 +205,7 @@ export default function NoteEditor() {
           </span>
 
           <span>
-            {editor?.storage?.characterCount?.characters() || 0} characters
+            {characterCount} characters
           </span>
         </div>
 

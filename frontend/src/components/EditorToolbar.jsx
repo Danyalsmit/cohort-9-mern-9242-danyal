@@ -44,6 +44,29 @@ export default function EditorToolbar({ editor }) {
     };
   }, [editor]);
 
+  const toggleHeading = () => {
+    editor
+      .chain()
+      .focus()
+      .command(({ tr, state }) => {
+        const { $from } = state.selection;
+        const block = $from.node($from.depth);
+        const blockPosition = $from.before($from.depth);
+        const heading = state.schema.nodes.heading;
+
+        if (!heading || !block.isTextblock) return false;
+
+        if (block.type === heading) {
+          tr.setNodeMarkup(blockPosition, state.schema.nodes.paragraph);
+        } else {
+          tr.setNodeMarkup(blockPosition, heading, { level: 2 });
+        }
+
+        return true;
+      })
+      .run();
+  };
+
   if (!editor) return null;
 
   const btnClass = (isActive, isDisabled = false) =>
@@ -56,7 +79,7 @@ export default function EditorToolbar({ editor }) {
     { icon: <BoldIcon />, action: () => editor.chain().focus().toggleBold().run(), isActive: activeStates.bold, title: "Bold" },
     { icon: <ItalicIcon />, action: () => editor.chain().focus().toggleItalic().run(), isActive: activeStates.italic, title: "Italic" },
     { icon: <StrikeIcon />, action: () => editor.chain().focus().toggleStrike().run(), isActive: activeStates.strike, title: "Strikethrough" },
-    { icon: <HeadingIcon />, action: () => editor.chain().focus().toggleHeading({ level: 2 }).run(), isActive: activeStates.heading, title: "Heading" },
+    { icon: <HeadingIcon />, action: toggleHeading, isActive: activeStates.heading, title: "Heading" },
     { icon: <ListIcon />, action: () => editor.chain().focus().toggleBulletList().run(), isActive: activeStates.bulletList, title: "Bullet List" },
     { icon: <OrderedListIcon />, action: () => editor.chain().focus().toggleOrderedList().run(), isActive: activeStates.orderedList, title: "Numbered List" },
     { icon: <QuoteIcon />, action: () => editor.chain().focus().toggleBlockquote().run(), isActive: activeStates.blockquote, title: "Quote" },
@@ -69,6 +92,7 @@ export default function EditorToolbar({ editor }) {
           <button
             key={tool.title}
             type="button"
+            onMouseDown={(event) => event.preventDefault()}
             onClick={tool.action}
             className={btnClass(tool.isActive)}
             title={tool.title}
@@ -83,6 +107,7 @@ export default function EditorToolbar({ editor }) {
 
         <button
           type="button"
+          onMouseDown={(event) => event.preventDefault()}
           onClick={() => editor.chain().focus().undo().run()}
           disabled={!canUndo}
           className={btnClass(false, !canUndo)}
@@ -93,6 +118,7 @@ export default function EditorToolbar({ editor }) {
 
         <button
           type="button"
+          onMouseDown={(event) => event.preventDefault()}
           onClick={() => editor.chain().focus().redo().run()}
           disabled={!canRedo}
           className={btnClass(false, !canRedo)}

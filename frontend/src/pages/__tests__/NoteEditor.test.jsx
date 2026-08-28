@@ -19,6 +19,8 @@ const mockGetHTML = jest.fn();
 const mockSetContent = jest.fn();
 
 let mockEditor;
+const mockEditorOn = jest.fn();
+const mockEditorOff = jest.fn();
 
 jest.mock("react-router-dom", () => ({
     useParams: jest.fn(),
@@ -84,6 +86,8 @@ beforeEach(() => {
 
     mockEditor = {
         getHTML: mockGetHTML,
+            on: mockEditorOn,
+            off: mockEditorOff,
         commands: {
             setContent: mockSetContent,
         },
