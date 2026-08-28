@@ -31,11 +31,13 @@ export default function NoteEditor() {
 
   useEffect(() => {
     if (!isEditMode) return;
+
     let cancelled = false;
 
     const loadNote = async () => {
       try {
         const res = await getNoteById(id);
+
         if (!cancelled) {
           setTitle(res.data.title);
           setNoteContent(res.data.content);
@@ -46,11 +48,14 @@ export default function NoteEditor() {
           navigate("/dashboard");
         }
       } finally {
-        if (!cancelled) setLoading(false);
+        if (!cancelled) {
+          setLoading(false);
+        }
       }
     };
 
     loadNote();
+
     return () => {
       cancelled = true;
     };
@@ -68,20 +73,37 @@ export default function NoteEditor() {
       return;
     }
 
+    if (!editor) {
+      toast.error("Editor is not ready");
+      return;
+    }
+
     const content = editor.getHTML();
+
     setSaving(true);
 
     try {
       if (isEditMode) {
-        await updateNote(id, { title, content });
+        await updateNote(id, {
+          title: title.trim(),
+          content,
+        });
+
         toast.success("Note updated");
       } else {
-        await createNote({ title, content });
+        await createNote({
+          title: title.trim(),
+          content,
+        });
+
         toast.success("Note created");
       }
+
       navigate("/dashboard");
     } catch (err) {
-      toast.error(err.response?.data?.message || "Failed to save note");
+      toast.error(
+        err.response?.data?.message || "Failed to save note"
+      );
     } finally {
       setSaving(false);
     }
@@ -91,8 +113,11 @@ export default function NoteEditor() {
     return (
       <div className="min-h-screen bg-[#fafaf9] flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
-          <div className="w-8 h-8 border-3 border-amber-600 border-t-transparent rounded-full animate-spin"></div>
-          <p className="text-stone-500 text-sm font-medium">Loading note...</p>
+          <div className="w-8 h-8 border-3 border-amber-600 border-t-transparent rounded-full animate-spin" />
+
+          <p className="text-stone-500 text-sm font-medium">
+            Loading note...
+          </p>
         </div>
       </div>
     );
@@ -103,7 +128,9 @@ export default function NoteEditor() {
       <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-stone-200/60">
         <div className="max-w-4xl mx-auto px-4 sm:px-6">
           <div className="flex justify-between items-center h-16">
+
             <button
+              type="button"
               onClick={() => navigate("/dashboard")}
               className="inline-flex items-center gap-2 text-stone-600 hover:text-slate-800 font-medium text-sm transition-colors"
             >
@@ -112,13 +139,17 @@ export default function NoteEditor() {
             </button>
 
             <div className="flex items-center gap-2">
+
               <button
+                type="button"
                 onClick={() => navigate("/dashboard")}
                 className="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-stone-200 text-stone-600 font-medium text-sm hover:bg-stone-50 hover:border-stone-300 active:scale-95 transition-all duration-200"
               >
                 Cancel
               </button>
+
               <button
+                type="button"
                 onClick={handleSave}
                 disabled={saving}
                 className="inline-flex items-center gap-2 bg-amber-600 text-white px-5 py-2 rounded-lg font-semibold text-sm hover:bg-amber-700 hover:shadow-lg hover:shadow-amber-600/20 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
@@ -126,12 +157,14 @@ export default function NoteEditor() {
                 <SaveIcon />
                 {saving ? "Saving..." : "Save"}
               </button>
+
             </div>
           </div>
         </div>
       </header>
 
       <main className="max-w-3xl mx-auto px-4 sm:px-6 py-8 pb-24">
+
         <input
           type="text"
           placeholder="Note title"
@@ -142,15 +175,24 @@ export default function NoteEditor() {
 
         <div className="bg-white rounded-2xl border border-stone-200/80 shadow-sm overflow-hidden">
           <EditorToolbar editor={editor} />
+
           <div className="overflow-x-hidden overflow-y-auto max-h-[calc(100vh-280px)]">
             <EditorContent editor={editor} />
           </div>
         </div>
 
         <div className="mt-4 flex items-center justify-between text-xs text-stone-400 px-1">
-          <span>{isEditMode ? "Editing existing note" : "Creating new note"}</span>
-          <span>{editor?.storage?.characterCount?.characters() || 0} characters</span>
+          <span>
+            {isEditMode
+              ? "Editing existing note"
+              : "Creating new note"}
+          </span>
+
+          <span>
+            {editor?.storage?.characterCount?.characters() || 0} characters
+          </span>
         </div>
+
       </main>
     </div>
   );

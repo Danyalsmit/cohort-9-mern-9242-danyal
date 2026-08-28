@@ -1,10 +1,11 @@
 import request from "supertest";
+import crypto from "node:crypto";
 import app from "../../src/app.js";
 
 export async function createTestUser() {
     const userData = {
         name: "Test User",
-        email: `test-${Date.now()}-${Math.random()}@gmail.com`,
+        email: `test-${Date.now()}-${crypto.randomUUID()}@gmail.com`,
         password: "123456",
     };
 
@@ -12,7 +13,6 @@ export async function createTestUser() {
     let login;
 
     try {
-        // Signup
         signup = await request(app)
             .post("/api/auth/signup")
             .send(userData);
@@ -23,7 +23,6 @@ export async function createTestUser() {
             );
         }
 
-        // Login
         login = await request(app)
             .post("/api/auth/login")
             .send({

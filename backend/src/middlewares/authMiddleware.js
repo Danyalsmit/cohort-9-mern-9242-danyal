@@ -4,9 +4,9 @@ import prisma from '../config/prisma.js';
 
 export const protect = async (req, res, next) => {
     const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return next(new AppError('No token provided', 401));
-    }
+   if (!authHeader?.startsWith('Bearer ')) {
+    return next(new AppError('No token provided', 401));
+}
 
     const token = authHeader.split(' ')[1];
     const tokenHash = hashToken(token);
@@ -43,6 +43,7 @@ export const protect = async (req, res, next) => {
         }
 
         req.user = user;
+        req.tokenExp = decoded.exp;        
         next();
     } catch (err) {
         next(err); 
