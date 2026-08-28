@@ -2,26 +2,27 @@ import DOMPurify from "dompurify";
 import { EditIcon, TrashIcon } from "./Icons";
 
 const backgrounds = [
+   {
+    className: "bg-yellow-50",
+    color: "#ebf7ea",
+    border: "#72bb47",
+  },
   {
     className: "bg-amber-50",
     color: "#fffbeb",
     border: "#f59e0b",
+  },
+   {
+    className: "bg-stone-50",
+    color: "#fafaf9",
+    border: "#a8a29e",
   },
   {
     className: "bg-orange-50",
     color: "#fff7ed",
     border: "#f97316",
   },
-  {
-    className: "bg-yellow-50",
-    color: "#fefce8",
-    border: "#eab308",
-  },
-  {
-    className: "bg-stone-50",
-    color: "#fafaf9",
-    border: "#a8a29e",
-  },
+ 
 ];
 
 export default function NoteCard({
@@ -105,21 +106,21 @@ export default function NoteCard({
 
       <div
         className="
-    absolute
-    top-3
-    right-3
-    flex
-    gap-1
-    opacity-0
-    group-hover:opacity-100
-    group-focus-within:opacity-100
-    translate-y-1
-    group-hover:translate-y-0
-    group-focus-within:translate-y-0
-    transition-all
-    duration-200
-    z-10
-  "
+        absolute
+        top-3
+        right-3
+        flex
+        gap-1
+        opacity-0
+        group-hover:opacity-100
+        group-focus-within:opacity-100
+        translate-y-1
+        group-hover:translate-y-0
+        group-focus-within:translate-y-0
+        transition-all
+        duration-200
+        z-10
+      "
       >
         <button
           type="button"
