@@ -43,9 +43,10 @@ const renderProfile = (user) => {
 };
 
 describe("Profile page", () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
+ beforeEach(() => {
+  jest.resetAllMocks();
+  mockNavigate.mockClear();
+});
 
   it("shows a loading message when the user is not yet available", () => {
     renderProfile(null);

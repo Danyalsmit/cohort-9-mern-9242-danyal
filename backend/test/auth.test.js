@@ -137,11 +137,27 @@ describe("Auth Routes", () => {
             .get("/api/auth/me");
 
         expect(res.status).to.equal(401);
-        expect(res.body).to.have.property("message");
+
+        expect(res.body).to.have.property(
+            "message",
+            "No token provided"
+        );
+    });
+
+    it("should return 401 for malformed authorization header", async () => {
+        const res = await request(app)
+            .get("/api/auth/me")
+            .set("Authorization", "Basic something");
+
+        expect(res.status).to.equal(401);
+
+        expect(res.body).to.have.property(
+            "message",
+            "No token provided"
+        );
     });
 
     it("should return current user with valid token", async () => {
-        // Helper give me user and token
         const { user, token } = await createTestUser();
 
         const res = await request(app)
@@ -156,8 +172,39 @@ describe("Auth Routes", () => {
         );
     });
 
+    it("should return 401 for an invalid token", async () => {
+        const res = await request(app)
+            .get("/api/auth/me")
+            .set("Authorization", "Bearer invalid-token");
+
+        expect(res.status).to.equal(401);
+
+        expect(res.body).to.have.property(
+            "message",
+            "Invalid or expired token"
+        );
+    });
+
+    it("should return 404 when token belongs to a deleted user", async () => {
+        const { user, token } = await createTestUser();
+
+        await prisma.user.delete({
+            where: { id: user.id },
+        });
+
+        const res = await request(app)
+            .get("/api/auth/me")
+            .set("Authorization", `Bearer ${token}`);
+
+        expect(res.status).to.equal(404);
+
+        expect(res.body).to.have.property(
+            "message",
+            "User not found"
+        );
+    });
+
     it("should logout and blacklist the token", async () => {
-       // Helper give me user and token
         const { token } = await createTestUser();
 
         const logoutRes = await request(app)
@@ -171,15 +218,20 @@ describe("Auth Routes", () => {
             "Logged out successfully"
         );
 
-        // Same token rejected
         const meRes = await request(app)
             .get("/api/auth/me")
             .set("Authorization", `Bearer ${token}`);
 
         expect(meRes.status).to.equal(401);
+
+        expect(meRes.body).to.have.property(
+            "message",
+            "Token has been revoked, please login again"
+        );
     });
 
     after(async () => {
         await prisma.$disconnect();
     });
 });
+
