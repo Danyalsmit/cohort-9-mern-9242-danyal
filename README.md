@@ -1,7 +1,7 @@
 # cohort-9-mern-9242-danyal
 Cohort 9 — MERN (NodeJS+ReactJS) assignment for Danyal khan
 
-A full-stack MERN (MongoDB/MySQL, Express, React, Node.js) application for creating, editing, and managing notes with rich text formatting. Built as part of the 10Pearls Cohort 9 internship program.
+A full-stack application built with MySQL, Express, React, and Node.js for creating, editing, and managing notes with rich text formatting. Built as part of the 10Pearls Cohort 9 internship program.
 
 ## Features
 
@@ -30,7 +30,31 @@ cohort-9-mern-9242-danyal/
 ## Getting Started
 
 ### Backend
-See [backend/README.md](./backend/README.md) for setup instructions.
+Backend
+
+Navigate to the backend directory:
+
+cd backend
+
+Install dependencies:
+
+npm install
+
+Create a .env file inside the backend directory with the following variables:
+
+PORT=5000
+DATABASE_URL="mysql://USERNAME:PASSWORD@localhost:3306/DATABASE_NAME"
+
+Replace USERNAME, PASSWORD, and DATABASE_NAME with your local MySQL database credentials and database name.
+
+Start the backend in development mode:
+
+npm run dev
+Running Backend Tests
+
+From the backend directory, run:
+
+npm test
 
 ### Frontend
 See [frontend/README.md](./frontend/README.md) for setup instructions.
