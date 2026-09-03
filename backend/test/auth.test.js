@@ -145,16 +145,19 @@ describe("Auth Routes", () => {
     });
 
     it("should return 401 for malformed authorization header", async () => {
-        const res = await request(app)
-            .get("/api/auth/me")
-            .set("Authorization", "Basic something");
+        try {
+            const res = await request(app)
+                .get("/api/auth/me")
+                .set("Authorization", "Basic something");
 
-        expect(res.status).to.equal(401);
-
-        expect(res.body).to.have.property(
-            "message",
-            "No token provided"
-        );
+            expect(res.status).to.equal(401);
+            expect(res.body).to.have.property(
+                "message",
+                "No token provided"
+            );
+        } catch (error) {
+            throw error;
+        }
     });
 
     it("should return current user with valid token", async () => {
