@@ -45,27 +45,8 @@ export default function EditorToolbar({ editor }) {
   }, [editor]);
 
   const toggleHeading = () => {
-    editor
-      .chain()
-      .focus()
-      .command(({ tr, state }) => {
-        const { $from } = state.selection;
-        const block = $from.node($from.depth);
-        const blockPosition = $from.before($from.depth);
-        const heading = state.schema.nodes.heading;
-
-        if (!heading || !block.isTextblock) return false;
-
-        if (block.type === heading) {
-          tr.setNodeMarkup(blockPosition, state.schema.nodes.paragraph);
-        } else {
-          tr.setNodeMarkup(blockPosition, heading, { level: 2 });
-        }
-
-        return true;
-      })
-      .run();
-  };
+  editor.chain().focus().toggleHeading({ level: 2 }).run();
+};
 
   if (!editor) return null;
 
